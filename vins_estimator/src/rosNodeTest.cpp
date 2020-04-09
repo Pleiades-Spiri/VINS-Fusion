@@ -83,15 +83,16 @@ void sync_process()
                 double time0 = img0_buf.front()->header.stamp.toSec();
                 double time1 = img1_buf.front()->header.stamp.toSec();
                 // 0.003s sync tolerance
-                if(time0 < time1 - 0.003)
+		// safy changed the tolerance to accomodate for spiri camera sync
+                if(time0 < time1 - 0.03)
                 {
                     img0_buf.pop();
-                    printf("throw img0\n");
+                    printf("A throw img0\n");
                 }
-                else if(time0 > time1 + 0.003)
+                else if(time0 > time1 + 0.03)
                 {
                     img1_buf.pop();
-                    printf("throw img1\n");
+                    printf("A throw img1\n");
                 }
                 else
                 {
