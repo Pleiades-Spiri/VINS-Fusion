@@ -1,16 +1,20 @@
 <launch>
     <arg name="config_file" default = "$(find loop_fusion)/../config/euroc/spiri_stereo_imu_config.yaml" />
 	<arg name="vins_path" default = "$(find loop_fusion)/../config/../" />
-    <!--<remap from="/vins_estimator/camera_pose" to="/mavros/vision_pose/pose"/>-->
-
+    <remap from="/gps" to="/mavros/global_position/raw/fix"/>
+    <remap from="/vins_estimator/odometry" to="/mavros/odometry/odom"/>
 
     <node name="vins_estimator" pkg="vins" type="vins_node" output="screen" args="$(arg config_file)" />
     
     <node name="loop" pkg="loop_fusion" type="loop_fusion_node" output="screen" args="$(arg config_file)" />
 
-    <node name="vision_pose_transformer" pkg="topic_tools" type="transform" output="screen" args="/vins_estimator/camera_pose /mavros/vision_pose/pose_cov geometry_msgs/PoseWithCovarianceStamped 'geometry_msgs.msg.PoseWithCovarianceStamped(header=std_msgs.msg.Header(seq=m.header.seq,stamp=m.header.stamp,frame_id= &quot;local_origin&quot;),pose=m.pose)' --import geometry_msgs std_msgs" />
+    <node name="vision_pose_transformer" pkg="topic_tools" type="transform" output="screen" args="/vins_estimator/camera_pose /mavros/vision_pose/pose_cov geometry_msgs/PoseWithCovarianceStamped 'geometry_msgs.msg.PoseWithCovarianceStamped(header=std_msgs.msg.Header(seq=m.header.seq,stamp=m.header.stamp,frame_id=&quot;world&quot;),pose=geometry_msgs.msg.PoseWithCovariance(pose=geometry_msgs.msg.Pose(position=geometry_msgs.msg.Point(x=m.pose.pose.position.x,y=m.pose.pose.position.y,z=m.pose.pose.position.z),orientation=m.pose.pose.orientation)))' --import geometry_msgs std_msgs" />
 
+    <node name="global_fusion" pkg="global_fusion" type="global_fusion_node" output="screen" />
     
-  <node pkg="tf" type="static_transform_publisher" name="world_to_local_origin" args="0 0 0 0 0 0 world local_origin 10" />
+    <node pkg="tf" type="static_transform_publisher" name="world_to_local_origin" args="0 0 0 0 0 0 world local_origin 10" />
 
-</launch>
+</launch>	
+
+
+<!-- geometry_msgs.msg.PoseWithCovariance(pose=geometry_msgs.msg.Pose(position=geometry_msgs.msg.Point(x=m.pose.pose.position.x,y=m.pose.pose.position.z,z=m.pose.pose.position.y),orientation=m.pose.pose.orientation)-->
