@@ -13,7 +13,7 @@ using namespace ros;
 using namespace Eigen;
 ros::Publisher pub_odometry, pub_latest_odometry;
 ros::Publisher pub_path;
-ros::Publisher pub_point_cloud, pub_margin_cloud;
+ros::Publisher pub_point_cloud, pub_point_cloud2, pub_margin_cloud;
 ros::Publisher pub_key_poses;
 ros::Publisher pub_camera_pose;
 ros::Publisher pub_camera_pose_visual;
@@ -37,6 +37,8 @@ void registerPub(ros::NodeHandle &n)
     pub_path = n.advertise<nav_msgs::Path>("path", 1000);
     pub_odometry = n.advertise<nav_msgs::Odometry>("odometry", 1000);
     pub_point_cloud = n.advertise<sensor_msgs::PointCloud>("point_cloud", 1000);
+    pub_point_cloud2 = n.advertise<sensor_msgs::PointCloud2>("point_cloud2", 1);
+
     pub_margin_cloud = n.advertise<sensor_msgs::PointCloud>("margin_cloud", 1000);
     pub_key_poses = n.advertise<visualization_msgs::Marker>("key_poses", 1000);
     pub_camera_pose = n.advertise<nav_msgs::Odometry>("camera_pose", 1000);
@@ -247,11 +249,17 @@ void pubCameraPose(const Estimator &estimator, const std_msgs::Header &header)
 
 void pubPointCloud(const Estimator &estimator, const std_msgs::Header &header)
 {
-    sensor_msgs::PointCloud point_cloud, loop_point_cloud;
+    sensor_msgs::PointCloud point_cloud, loop_point_cloud, point_cloud_cam;
+    sensor_msgs::PointCloud2 point_cloud2_cam;
+
     point_cloud.header = header;
+    std_msgs::Header header_cam = header;
+    header_cam.frame_id = CAM_FRAME;
+    point_cloud_cam.header = header_cam;
     loop_point_cloud.header = header;
 
-
+    int offset = 0;
+    int32_t rgb = 255;
     for (auto &it_per_id : estimator.f_manager.feature)
     {
         int used_num;
@@ -269,8 +277,19 @@ void pubPointCloud(const Estimator &estimator, const std_msgs::Header &header)
         p.y = w_pts_i(1);
         p.z = w_pts_i(2);
         point_cloud.points.push_back(p);
+
+        geometry_msgs::Point32 p_cam;
+        p_cam.x = pts_i(0);
+        p_cam.y = pts_i(1);
+        p_cam.z = pts_i(2);
+        point_cloud_cam.points.push_back(p_cam);
+
+
     }
     pub_point_cloud.publish(point_cloud);
+    sensor_msgs::convertPointCloudToPointCloud2(point_cloud_cam,point_cloud2_cam);
+    pub_point_cloud2.publish(point_cloud2_cam); 
+
 
 
     // pub margined potin
@@ -301,6 +320,7 @@ void pubPointCloud(const Estimator &estimator, const std_msgs::Header &header)
         }
     }
     pub_margin_cloud.publish(margin_cloud);
+
 }
 
 
