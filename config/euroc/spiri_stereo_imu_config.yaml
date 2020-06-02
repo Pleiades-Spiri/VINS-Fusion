@@ -15,7 +15,7 @@ cam0_calib: "spiri_right_mei.yaml"
 image_width: 320
 image_height: 240
    
-
+cam0_frame: "camera"
 # Extrinsic parameter between IMU and Camera.
 estimate_extrinsic: 1   # 0  Have an accurate extrinsic parameters. We will trust the following imu^R_cam, imu^T_cam, don't change it.
                         # 1  Have an initial guess about extrinsic parameters. We will optimize around your initial guess.
