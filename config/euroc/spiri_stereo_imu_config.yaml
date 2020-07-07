@@ -6,18 +6,18 @@ imu: 1
 num_of_cam: 2  
 
 imu_topic: "/mavros/imu/data_raw"
-image1_topic: "/stereo/left/image_raw"
-image0_topic: "/stereo/right/image_raw"
+image0_topic: "/stereo/left/image_raw"
+image1_topic: "/stereo/right/image_raw"
 output_path: "~/Documents/Vinsoutput/"
 
-cam1_calib: "spiri_left_mei.yaml"
-cam0_calib: "spiri_right_mei.yaml"
+cam0_calib: "spiri_left_mei.yaml"
+cam1_calib: "spiri_right_mei.yaml"
 image_width: 320
 image_height: 240
    
 cam0_frame: "camera"
 # Extrinsic parameter between IMU and Camera.
-estimate_extrinsic: 1   # 0  Have an accurate extrinsic parameters. We will trust the following imu^R_cam, imu^T_cam, don't change it.
+estimate_extrinsic: 0   # 0  Have an accurate extrinsic parameters. We will trust the following imu^R_cam, imu^T_cam, don't change it.
                         # 1  Have an initial guess about extrinsic parameters. We will optimize around your initial guess.
 
 body_T_cam0: !!opencv-matrix
@@ -38,10 +38,10 @@ body_T_cam0: !!opencv-matrix
 #           0, 0, 0, 1]
 
 #######Approximation
-   data: [0, 0, 1, 0.05,
-           -1, 0, 0, -0.024588266,
-           0, -1, 0, -0.0230172,
-           0, 0, 0, 1]
+#   data: [0, 0, 1, 0.05,
+#           -1, 0, 0, -0.024588266,
+#           0, -1, 0, -0.0230172,
+#           0, 0, 0, 1]
  
 ###Calibration using kalibr camera-IMU
 
@@ -53,6 +53,21 @@ body_T_cam0: !!opencv-matrix
 ##### Approximate
 #data: [0,0,1,-0.146,-1,0,0,-0.029,0,-1,0,-0.145,0,0,0,1]
 
+####### Calibration for Spiri original piece, based on camera angle to be 115 degree on y-axis then -90 degree on z-axis ###### 
+
+
+#   data: [1.0,  0.0000000,  0.0, 0.08505,   0.0000000,  -0.4226183,  0.9063078, -0.0265, 0.0,  -0.9063078,  -0.4226183, 0.0562,0,0,0,1]
+#   data: [-0.4226183,  0.0000000, 0.9063078 , 0.08505, 0.0000000,  1.0000000,  0.0000000, -0.0265, -0.9063078,  0.0000000, -0.4226183,0.0562,0,0,0,1]
+#   data: [-0.0000000, 0.4226183,  0.9063078, 0.08505,1.0000000,  0.0000000, -0.0000000, -0.0265, 0.0000000, 0.9063078, 0.4226183,0.0562 ,0,0,0,1]
+#   data: [ 0.0000000,  1.0000000,  0.0000000, 0.08505, 0.4226183, -0.0000000,  0.9063078, -0.0265,   0.9063078, -0.0000000, -0.4226183,0.0562 ,0,0,0,1]
+#   data: [ 1.0000000,  0.0000000,  0.0000000, 0.08505 , 0.0000000, -0.4226183,  0.9063078, -0.0265,  0.0000000, -0.9063078, -0.4226183,0.0562 ,0,0,0,1]
+#   data: [ -0.4480736,  0.0000000,  0.8939967, 0.08505 ,-0.8452160, -0.3258098, -0.4236246, -0.0265,  0.2912729, -0.9454353,  0.1459868 ,0.0562 ,0,0,0,1]
+#   data: [ 1.0000000,  0.0000000,  0.0000000, 0.08505 , 0.0000000, -0.4226183,  -0.9063078, -0.0265,  0.0000000, 0.9063078, -0.4226183,0.0562 ,0,0,0,1]
+#   data: [-0.4226183,  0.0000000, -0.9063078 , 0.08505, 0.0000000,  1.0000000,  0.0000000, -0.0265, 0.9063078,  0.0000000, -0.4226183,0.0562,0,0,0,1]
+#   data: [-0.0000000, 0.4226183,  0.9063078, 0.08505,1.0000000,  0.0000000, -0.0000000, -0.0265, 0.0000000, 0.9063078, -0.4226183,-0.0562 ,0,0,0,1]
+
+
+   data: [-0.0000000, -0.4226183,  0.9063078, 0.08505,-1.0000000,  0.0000000, -0.0000000, 0.0265, 0.0000000, -0.9063078, -0.4226183,-0.0562 ,0,0,0,1]
 body_T_cam1: !!opencv-matrix
    rows: 4
    cols: 4
@@ -72,10 +87,7 @@ body_T_cam1: !!opencv-matrix
 #           0.4036987, -0.8546475, -0.3265043, -0.0160487496035,
 #          0, 0, 0, 1]
 ######Approximation
-   data: [0, 0,  1, 0.05,
-          -1, 0, 0, 0.024588266,
-           0, -1, 0, -0.0230,
-          0, 0, 0, 1]
+#   data: [0, 0,  1, 0.05,-1, 0, 0, 0.024588266,0, -1, 0, -0.0230,0, 0, 0, 1]
 
 ########Calibration using Kalibr camera-IMU
 #   data: [-0.11307557, -0.99321226,  0.02726409, -0.09860036, -0.00429691, -0.026951, -0.99962752, -0.14653802, 0.9935771,  -0.1131506,  -0.00122025,  0.14282103, 0,  0, 0,  1 ]
@@ -85,13 +97,25 @@ body_T_cam1: !!opencv-matrix
 #######Approximate
 #   data: [0,0,1,-0.154,-1,0,0,-0.086,0,-1,0,-0.144,0,0,0,1]
 
+####### Calibration for Spiri original piece, based on camera angle to be 115 degree on y-axis then -90 degree on z-axis ###### 
+#   data: [1.0,  0.0000000,  0.0, 0.08505,   0.0000000,  -0.4226183,  0.9063078, 0.0265, 0.0,  -0.9063078,  -0.4226183, 0.0562,0,0,0,1]
+#   data: [-0.4226183,  0.0000000, 0.9063078 , 0.08505, 0.0000000,  1.0000000,  0.0000000, 0.0265, -0.9063078,  0.0000000, -0.4226183,0.0562,0,0,0,1]
+#   data: [-0.0000000, 0.4226183,  0.9063078, 0.08505,1.0000000,  0.0000000, -0.0000000, 0.0265, 0.0000000, 0.9063078, 0.4226183,0.0562 ,0,0,0,1]
+#   data: [-0.4226183,  0.0000000, -0.9063078 , 0.08505, 0.0000000,  1.0000000,  0.0000000, 0.0265, -0.9063078,  0.0000000, -0.4226183,0.0562,0,0,0,1]
+#   data: [ 0.0000000,  1.0000000,  0.0000000, 0.08505, 0.4226183, -0.0000000,  0.9063078, 0.0265,   0.9063078, -0.0000000, -0.4226183,0.0562 ,0,0,0,1]
+#   data: [ 1.0000000,  0.0000000,  0.0000000, 0.08505 , 0.0000000, -0.4226183,  0.9063078, 0.0265,  0.0000000, -0.9063078, -0.4226183,0.0562 ,0,0,0,1]
+#   data: [ -0.4480736,  0.0000000,  0.8939967, 0.08505 ,-0.8452160, -0.3258098, -0.4236246, 0.0265,  0.2912729, -0.9454353,  0.1459868 ,0.0562 ,0,0,0,1]
+#   data: [ 1.0000000,  0.0000000,  0.0000000, 0.08505 , 0.0000000, -0.4226183,  -0.9063078, 0.0265,  0.0000000, 0.9063078, -0.4226183,0.0562 ,0,0,0,1]
+#  data: [-0.4226183,  0.0000000, -0.9063078 , 0.08505, 0.0000000,  1.0000000,  0.0000000, 0.0265, 0.9063078,  0.0000000, -0.4226183,0.0562,0,0,0,1]
+#   data: [-0.0000000, 0.4226183,  0.9063078, 0.08505,1.0000000,  0.0000000, -0.0000000, 0.0265, 0.0000000, 0.9063078, -0.4226183,-0.0562 ,0,0,0,1]
 
 
+   data: [-0.0000000, -0.4226183,  0.9063078, 0.08505,-1.0000000,  0.0000000, -0.0000000, -0.0265, 0.0000000, -0.9063078, -0.4226183,-0.0562 ,0,0,0,1]
 #Multiple thread support
 multiple_thread: 1
 
-#feature traker paprameters
-max_cnt: 150            # max feature number in feature tracking
+#feature traker paprameter
+max_cnt: 1500            # max feature number in feature tracking
 min_dist: 30            # min distance between two features 
 freq: 10                # frequence (Hz) of publish tracking result. At least 10Hz for good estimation. If set 0, the frequence will be same as raw image 
 F_threshold: 1.0        # ransac threshold (pixel)
@@ -104,9 +128,9 @@ max_num_iterations: 8   # max solver itrations, to guarantee real time
 keyframe_parallax: 10.0 # keyframe selection threshold (pixel)
 
 #imu parameters       The more accurate parameters you provide, the better performance
-acc_n: 0.9          # accelerometer measurement noise standard deviation. #0.2
+acc_n: 0.7          # accelerometer measurement noise standard deviation. #0.2
 gyr_n: 0.5         # gyroscope measurement noise standard deviation.     #0.05
-acc_w: 0.2         # accelerometer bias random work noise standard deviation.  #0.02
+acc_w: 0.02         # accelerometer bias random work noise standard deviation.  #0.02
 gyr_w: 4.0e-3       # gyroscope bias random work noise standard deviation.     #4.0e-5
 g_norm: 9.81007     # gravity magnitude
 
